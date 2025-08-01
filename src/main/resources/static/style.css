@@ -1,0 +1,466 @@
+/* =================================
+   TODO APP - STYLES GLOBAUX
+   ================================= */
+
+/* Variables CSS */
+:root {
+    --primary-color: #0d6efd;
+    --success-color: #198754;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+    --info-color: #0dcaf0;
+    --dark-color: #212529;
+    --light-color: #f8f9fa;
+    --border-radius: 8px;
+    --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+}
+
+/* =================================
+   STYLES GÉNÉRAUX
+   ================================= */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f7fa;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+}
+
+/* =================================
+   NAVIGATION
+   ================================= */
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.nav-link {
+    font-weight: 500;
+    transition: var(--transition);
+    border-radius: 6px;
+    margin: 0 5px;
+    padding: 8px 15px !important;
+}
+
+.nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-1px);
+}
+
+.nav-link.active {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* =================================
+   CARTES ET CONTENEURS
+   ================================= */
+
+.card {
+    border: none;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+    border-bottom: none;
+    font-weight: 600;
+    padding: 1.25rem 1.5rem;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* =================================
+   TABLEAUX
+   ================================= */
+
+.table {
+    margin-bottom: 0;
+}
+
+.table th {
+    border-top: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 1rem 0.75rem;
+    background-color: var(--light-color);
+}
+
+.table td {
+    vertical-align: middle;
+    padding: 1rem 0.75rem;
+    border-top: 1px solid #eef2f7;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(13, 110, 253, 0.05);
+    transform: scale(1.01);
+    transition: var(--transition);
+}
+
+/* =================================
+   BADGES ET STATUTS
+   ================================= */
+
+.badge {
+    font-weight: 500;
+    font-size: 0.75rem;
+    padding: 0.5em 0.8em;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-todo {
+    background: linear-gradient(45deg, #6c757d, #5a6268);
+    color: white;
+}
+
+.status-progress {
+    background: linear-gradient(45deg, #ffc107, #e0a800);
+    color: #000;
+}
+
+.status-done {
+    background: linear-gradient(45deg, #198754, #146c43);
+    color: white;
+}
+
+.priority-low {
+    background: linear-gradient(45deg, #0dcaf0, #0aa2c0);
+    color: white;
+}
+
+.priority-medium {
+    background: linear-gradient(45deg, #fd7e14, #e8590c);
+    color: white;
+}
+
+.priority-high {
+    background: linear-gradient(45deg, #dc3545, #b02a37);
+    color: white;
+}
+
+/* =================================
+   BOUTONS
+   ================================= */
+
+.btn {
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    transition: var(--transition);
+    border: none;
+    padding: 0.6rem 1.2rem;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, var(--primary-color), #0b5ed7);
+}
+
+.btn-success {
+    background: linear-gradient(45deg, var(--success-color), #146c43);
+}
+
+.btn-warning {
+    background: linear-gradient(45deg, var(--warning-color), #e0a800);
+    color: #000;
+}
+
+.btn-danger {
+    background: linear-gradient(45deg, var(--danger-color), #b02a37);
+}
+
+.btn-outline-primary:hover,
+.btn-outline-success:hover,
+.btn-outline-warning:hover,
+.btn-outline-danger:hover {
+    transform: translateY(-2px);
+}
+
+/* =================================
+   ALERTES
+   ================================= */
+
+.alert {
+    border: none;
+    border-radius: var(--border-radius);
+    padding: 1.25rem 1.5rem;
+    box-shadow: var(--box-shadow);
+}
+
+.alert-info {
+    background: linear-gradient(135deg, #e7f3ff, #cfe8ff);
+    color: #0c5460;
+}
+
+.alert-success {
+    background: linear-gradient(135deg, #e8f5e8, #d1f2d1);
+    color: #0a3622;
+}
+
+.alert-warning {
+    background: linear-gradient(135deg, #fff8e1, #ffecb3);
+    color: #664d03;
+}
+
+/* =================================
+   FORMULAIRES
+   ================================= */
+
+.form-control,
+.form-select {
+    border: 2px solid #e9ecef;
+    border-radius: var(--border-radius);
+    padding: 0.75rem 1rem;
+    transition: var(--transition);
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+    transform: translateY(-1px);
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--dark-color);
+    margin-bottom: 0.75rem;
+}
+
+/* =================================
+   JUMBOTRON / HERO
+   ================================= */
+
+.jumbotron {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.jumbotron h1 {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.jumbotron .btn {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* =================================
+   STATISTIQUES / MÉTRIQUES
+   ================================= */
+
+.stats-card {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    text-align: center;
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+}
+
+.stats-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.stats-card h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.stats-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+/* =================================
+   ICÔNES ET ÉLÉMENTS VISUELS
+   ================================= */
+
+.icon-large {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.profile-avatar {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(45deg, var(--primary-color), var(--info-color));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    box-shadow: var(--box-shadow);
+}
+
+/* =================================
+   TASK CARDS (CARTES DE TÂCHES)
+   ================================= */
+
+.task-card {
+    border-left: 4px solid var(--primary-color);
+    transition: var(--transition);
+}
+
+.task-card:hover {
+    border-left-color: var(--success-color);
+    transform: translateX(5px);
+}
+
+.task-card.overdue {
+    border-left-color: var(--danger-color);
+    background-color: rgba(220, 53, 69, 0.05);
+}
+
+/* =================================
+   ANIMATIONS
+   ================================= */
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.loading-spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid var(--primary-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* =================================
+   FOOTER
+   ================================= */
+
+footer {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem 0;
+    margin-top: 4rem;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* =================================
+   RESPONSIVE
+   ================================= */
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px;
+    }
+
+    .btn-group-sm .btn {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+    }
+
+    .stats-card h2 {
+        font-size: 2rem;
+    }
+
+    .table-responsive {
+        font-size: 0.9rem;
+    }
+}
+
+/* =================================
+   DARK MODE (BONUS)
+   ================================= */
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #f0f0f0;
+    }
+
+    .card {
+        background-color: #2d2d2d;
+        color: #f0f0f0;
+    }
+
+    .table th {
+        background-color: #3d3d3d;
+        color: #f0f0f0;
+    }
+}
+
+/* =================================
+    UTILS (CLASSES UTILITAIRES)
+   ================================= */
+
+.shadow-custom {
+    box-shadow: var(--box-shadow) !important;
+}
+
+.rounded-custom {
+    border-radius: var(--border-radius) !important;
+}
+
+.gradient-primary {
+    background: linear-gradient(45deg, var(--primary-color), #0b5ed7);
+    color: white;
+}
+
+.gradient-success {
+    background: linear-gradient(45deg, var(--success-color), #146c43);
+    color: white;
+}
+
+.text-gradient {
+    background: linear-gradient(45deg, var(--primary-color), var(--info-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700;
+}
