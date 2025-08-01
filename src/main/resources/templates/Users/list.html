@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org"
+    th:replace="~{layout :: layout(~{::content}, 'Liste des utilisateurs')}">
+<div th:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>
+            <i class="bi bi-people"></i> Liste des utilisateurs
+        </h2>
+        <div class="text-muted">
+            <span th:text="${users.size()}">0</span> utilisateur(s)
+        </div>
+    </div>
+
+    <div th:if="${users.isEmpty()}" class="alert alert-info text-center">
+        <h4>Aucun utilisateur trouvé</h4>
+        <p>La base de données ne contient aucun utilisateur pour le moment.</p>
+    </div>
+
+    <div th:unless="${users.isEmpty()}">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th><i class="bi bi-hash"></i> ID</th>
+                                <th><i class="bi bi-person"></i> Nom d'utilisateur</th>
+                                <th><i class="bi bi-person-badge"></i> Nom complet</th>
+                                <th><i class="bi bi-envelope"></i> Email</th>
+                                <th><i class="bi bi-calendar"></i> Inscription</th>
+                                <th><i class="bi bi-list-task"></i> Tâches</th>
+                                <th><i class="bi bi-gear"></i> Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="user : ${users}">
+                                <td>
+                                    <span class="badge bg-secondary" th:text="${user.id}">1</span>
+                                </td>
+                                <td>
+                                    <strong th:text="${user.username}">Username</strong>
+                                </td>
+                                <td>
+                                    <span th:text="${user.fullName}" th:if="${!#strings.isEmpty(user.fullName)}">Nom
+                                        complet</span>
+                                    <em class="text-muted" th:unless="${!#strings.isEmpty(user.fullName)}">Non
+                                        renseigné</em>
+                                </td>
+                                <td>
+                                    <a th:href="@{'mailto:' + ${user.email}}" th:text="${user.email}"
+                                        class="text-decoration-none">
+                                        Email
+                                    </a>
+                                </td>
+                                <td>
+                                    <span th:text="${#temporals.format(user.createdAt, 'dd/MM/yyyy')}">Date</span>
+                                    <br>
+                                    <small class="text-muted"
+                                        th:text="${#temporals.format(user.createdAt, 'HH:mm')}">Heure</small>
+                                </td>
+                                <td>
+                                    <span class="badge bg-primary"
+                                        th:text="${user.tasks != null ? user.tasks.size() : 0}">0</span>
+                                    tâche(s)
+                                </td>
+                                <td>
+                                    <a th:href="@{/users/{id}(id=${user.id})}" class="btn btn-outline-primary btn-sm"
+                                        title="Voir le détail">
+                                        <i class="bi bi-eye"></i> Voir
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistiques rapides -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="bi bi-bar-chart"></i> Statistiques rapides
+                        </h5>
+                        <div class="row text-center">
+                            <div class="col-md-3">
+                                <h4 class="text-primary" th:text="${users.size()}">0</h4>
+                                <p class="mb-0">Total utilisateurs</p>
+                            </div>
+                            <div class="col-md-3">
+                                <h4 class="text-success" th:text="${#aggregates.sum(users.![tasks.size()])}">0</h4>
+                                <p class="mb-0">Total tâches</p>
+                            </div>
+                            <div class="col-md-3">
+                                <h4 class="text-info">
+                                    <span
+                                        th:text="${#numbers.formatDecimal(#aggregates.sum(users.![tasks.size()]) / users.size(), 1, 1)}">0.0</span>
+                                </h4>
+                                <p class="mb-0">Tâches par utilisateur</p>
+                            </div>
+                            <div class="col-md-3">
+                                <a th:href="@{/api/users}" target="_blank" class="btn btn-outline-info btn-sm">
+                                    <i class="bi bi-code"></i> API JSON
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</html>

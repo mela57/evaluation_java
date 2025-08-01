@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::content}, ${task.title})}">
+<div th:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>
+            <i class="bi bi-card-text"></i> Détail de la tâche
+        </h2>
+        <div>
+            <a th:href="@{/tasks}" class="btn btn-outline-secondary me-2">
+                <i class="bi bi-arrow-left"></i> Retour à la liste
+            </a>
+            <a th:href="@{/tasks/{id}/edit(id=${task.id})}" class="btn btn-warning">
+                <i class="bi bi-pencil"></i> Modifier
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Contenu principal -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0" th:text="${task.title}">Titre de la tâche</h4>
+                    <div>
+                        <span class="badge"
+                            th:classappend="${task.status.name() == 'DONE'} ? 'bg-success' : (${task.status.name() == 'IN_PROGRESS'} ? 'bg-warning text-dark' : 'bg-secondary')"
+                            th:text="${task.status.displayName}">Statut</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- Description -->
+                    <div class="mb-4">
+                        <h6><i class="bi bi-text-paragraph"></i> Description :</h6>
+                        <div th:if="${!#strings.isEmpty(task.description)}" class="bg-light p-3 rounded">
+                            <p class="mb-0" th:text="${task.description}">Description de la tâche</p>
+                        </div>
+                        <div th:unless="${!#strings.isEmpty(task.description)}" class="text-muted fst-italic">
+                            Aucune description fournie.
+                        </div>
+                    </div>
+
+                    <!-- Informations principales -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <h6><i class="bi bi-flag"></i> Statut :</h6>
+                                <span class="badge fs-6"
+                                    th:classappend="${task.status.name() == 'DONE'} ? 'bg-success' : (${task.status.name() == 'IN_PROGRESS'} ? 'bg-warning text-dark' : 'bg-secondary')"
+                                    th:text="${task.status.displayName}">Statut</span>
+                            </div>
+
+                            <div class="mb-3">
+                                <h6><i class="bi bi-exclamation-triangle"></i> Priorité :</h6>
+                                <span class="badge fs-6"
+                                    th:classappend="${task.priority.name() == 'HIGH'} ? 'bg-danger' : (${task.priority.name() == 'MEDIUM'} ? 'bg-warning text-dark' : 'bg-info')"
+                                    th:text="${task.priority.displayName}">Priorité</span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <h6><i class="bi bi-person"></i> Assigné à :</h6>
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center me-2"
+                                        style="width: 40px; height: 40px;">
+                                        <i class="bi bi-person-fill text-secondary"></i>
+                                    </div>
+                                    <div>
+                                        <a th:href="@{/users/{id}(id=${task.user.id})}" th:text="${task.user.fullName}"
+                                            class="text-decoration-none fw-bold">Utilisateur</a>
+                                        <br>
+                                        <small class="text-muted" th:text="${task.user.email}">email</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dates -->
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="bg-light p-3 rounded text-center">
+                                <h6 class="text-muted mb-1">Créée le</h6>
+                                <div th:text="${#temporals.format(task.createdAt, 'dd/MM/yyyy')}">Date</div>
+                                <small class="text-muted"
+                                    th:text="${#temporals.format(task.createdAt, 'HH:mm')}">Heure</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="bg-light p-3 rounded text-center">
+                                <h6 class="text-muted mb-1">Modifiée le</h6>
+                                <div th:text="${#temporals.format(task.updatedAt, 'dd/MM/yyyy')}">Date</div>
+                                <small class="text-muted"
+                                    th:text="${#temporals.format(task.updatedAt, 'HH:mm')}">Heure</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-3 rounded text-center"
+                                th:classappend="${task.overdue} ? 'bg-warning' : 'bg-light'">
+                                <h6 class="mb-1" th:classappend="${task.overdue} ? 'text-dark' : 'text-muted'">
+                                    Échéance
+                                    <i class="bi bi-exclamation-triangle" th:if="${task.overdue}"></i>
+                                </h6>
+                                <div th:if="${task.dueDate != null}">
+                                    <div th:text="${#temporals.format(task.dueDate, 'dd/MM/yyyy')}">Date</div>
+                                    <small th:text="${#temporals.format(task.dueDate, 'HH:mm')}"
+                                        th:classappend="${task.overdue} ? 'text-dark' : 'text-muted'">Heure</small>
+                                    <div th:if="${task.overdue}" class="text-danger mt-1">
+                                        <small><strong>En retard !</strong></small>
+                                    </div>
+                                </div>
+                                <div th:unless="${task.dueDate != null}" class="text-muted">
+                                    <em>Non définie</em>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions rapides -->
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h6><i class="bi bi-lightning"></i> Actions rapides</h6>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <!-- Boutons de changement de statut -->
+                        <div th:unless="${task.status.name() == 'TODO'}" class="d-inline">
+                            <form th:action="@{/tasks}" method="post" class="d-inline">
+                                <input type="hidden" th:value="${task.id}" name="id">
+                                <input type="hidden" th:value="${task.title}" name="title">
+                                <input type="hidden" th:value="${task.description}" name="description">
+                                <input type="hidden" th:value="${task.priority}" name="priority">
+                                <input type="hidden" th:value="${task.user.id}" name="user">
+                                <input type="hidden" th:value="${task.dueDate}" name="dueDate">
+                                <input type="hidden" value="TODO" name="status">
+                                <button type="submit" class="btn btn-outline-secondary btn-sm">
+                                    <i class="bi bi-arrow-clockwise"></i> Remettre à faire
+                                </button>
+                            </form>
+                        </div>
+
+                        <div th:unless="${task.status.name() == 'IN_PROGRESS'}" class="d-inline">
+                            <form th:action="@{/tasks}" method="post" class="d-inline">
+                                <input type="hidden" th:value="${task.id}" name="id">
+                                <input type="hidden" th:value="${task.title}" name="title">
+                                <input type="hidden" th:value="${task.description}" name="description">
+                                <input type="hidden" th:value="${task.priority}" name="priority">
+                                <input type="hidden" th:value="${task.user.id}" name="user">
+                                <input type="hidden" th:value="${task.dueDate}" name="dueDate">
+                                <input type="hidden" value="IN_PROGRESS" name="status">
+                                <button type="submit" class="btn btn-outline-warning btn-sm">
+                                    <i class="bi bi-play"></i> Commencer
+                                </button>
+                            </form>
+                        </div>
+
+                        <div th:unless="${task.status.name() == 'DONE'}" class="d-inline">
+                            <form th:action="@{/tasks}" method="post" class="d-inline">
+                                <input type="hidden" th:value="${task.id}" name="id">
+                                <input type="hidden" th:value="${task.title}" name="title">
+                                <input type="hidden" th:value="${task.description}" name="description">
+                                <input type="hidden" th:value="${task.priority}" name="priority">
+                                <input type="hidden" th:value="${task.user.id}" name="user">
+                                <input type="hidden" th:value="${task.dueDate}" name="dueDate">
+                                <input type="hidden" value="DONE" name="status">
+                                <button type="submit" class="btn btn-outline-success btn-sm">
+                                    <i class="bi bi-check"></i> Marquer terminé
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panneau latéral -->
+        <div class="col-md-4">
+            <!-- Informations complémentaires -->
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h6 class="mb-0">
+                        <i class="bi bi-info-circle"></i> Informations
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <small class="text-muted">ID de la tâche</small><br>
+                        <code th:text="${task.id}">#1</code>
+                    </div>
+
+                    <div class="mb-3">
+                        <small class="text-muted">Temps écoulé depuis création</small><br>
+                        <span th:text="${#temporals.formatDiff(task.createdAt, #temporals.createNow(), 'fr')}">X
+                            jours</span>
+                    </div>
+
+                    <div class="mb-3" th:if="${task.dueDate != null}">
+                        <small class="text-muted">Temps restant</small><br>
+                        <span th:if="${!task.overdue}"
+                            th:text="${#temporals.formatDiff(#temporals.createNow(), task.dueDate, 'fr')}">X
+                            jours</span>
+                        <span th:if="${task.overdue}" class="text-danger">
+                            <strong>Retard de <span
+                                    th:text="${#temporals.formatDiff(task.dueDate, #temporals.createNow(), 'fr')}">X
+                                    jours</span></strong>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions de gestion -->
+            <div class="card mt-3">
+                <div class="card-header bg-warning text-dark">
+                    <h6 class="mb-0">
+                        <i class="bi bi-tools"></i> Gestion
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a th:href="@{/tasks/{id}/edit(id=${task.id})}" class="btn btn-warning btn-sm">
+                            <i class="bi bi-pencil"></i> Modifier la tâche
+                        </a>
+
+                        <a th:href="@{/users/{id}(id=${task.user.id})}" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-person"></i> Voir l'utilisateur
+                        </a>
+
+                        <hr>
+
+                        <form th:action="@{/tasks/{id}/delete(id=${task.id})}" method="post">
+                            <button type="submit" class="btn btn-outline-danger btn-sm w-100"
+                                onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette tâche ?\n\nTitre: ' + document.querySelector('h4').textContent + '\n\nCette action est irréversible.')">
+                                <i class="bi bi-trash"></i> Supprimer la tâche
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Liens API -->
+            <div class="card mt-3">
+                <div class="card-header bg-dark text-white">
+                    <h6 class="mb-0">
+                        <i class="bi bi-code"></i> API
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <p class="small mb-2">Endpoints API pour cette tâche :</p>
+                    <div class="d-grid gap-1">
+                        <a th:href="@{/api/tasks/{id}(id=${task.id})}" target="_blank"
+                            class="btn btn-outline-dark btn-sm">
+                            <i class="bi bi-eye"></i> GET JSON
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</html>

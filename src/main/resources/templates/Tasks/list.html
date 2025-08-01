@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::content}, 'Liste des tâches')}">
+<div th:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>
+            <i class="bi bi-list-task"></i> Liste des tâches
+        </h2>
+        <div>
+            <span class="text-muted me-3">
+                <span th:text="${tasks.size()}">0</span> tâche(s)
+            </span>
+            <a th:href="@{/tasks/new}" class="btn btn-success">
+                <i class="bi bi-plus-circle"></i> Nouvelle tâche
+            </a>
+        </div>
+    </div>
+
+    <div th:if="${tasks.isEmpty()}" class="alert alert-info text-center">
+        <h4><i class="bi bi-inbox"></i> Aucune tâche trouvée</h4>
+        <p>Commencez par créer votre première tâche !</p>
+        <a th:href="@{/tasks/new}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Créer une tâche
+        </a>
+    </div>
+
+    <div th:unless="${tasks.isEmpty()}">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th><i class="bi bi-hash"></i> ID</th>
+                                <th><i class="bi bi-card-text"></i> Titre</th>
+                                <th><i class="bi bi-person"></i> Utilisateur</th>
+                                <th><i class="bi bi-flag"></i> Statut</th>
+                                <th><i class="bi bi-exclamation-triangle"></i> Priorité</th>
+                                <th><i class="bi bi-calendar"></i> Échéance</th>
+                                <th><i class="bi bi-gear"></i> Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="task : ${tasks}" th:classappend="${task.overdue} ? 'table-warning' : ''">
+                                <td>
+                                    <span class="badge bg-secondary" th:text="${task.id}">1</span>
+                                </td>
+                                <td>
+                                    <div>
+                                        <strong th:text="${task.title}">Titre</strong>
+                                        <div th:if="${!#strings.isEmpty(task.description)}"
+                                            class="text-muted small mt-1">
+                                            <span
+                                                th:text="${#strings.abbreviate(task.description, 60)}">Description...</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a th:href="@{/users/{id}(id=${task.user.id})}" th:text="${task.user.fullName}"
+                                        class="text-decoration-none">Utilisateur</a>
+                                </td>
+                                <td>
+                                    <span class="badge"
+                                        th:classappend="${task.status.name() == 'DONE'} ? 'bg-success' : (${task.status.name() == 'IN_PROGRESS'} ? 'bg-warning text-dark' : 'bg-secondary')"
+                                        th:text="${task.status.displayName}">Statut</span>
+                                </td>
+                                <td>
+                                    <span class="badge"
+                                        th:classappend="${task.priority.name() == 'HIGH'} ? 'bg-danger' : (${task.priority.name() == 'MEDIUM'} ? 'bg-warning text-dark' : 'bg-info')"
+                                        th:text="${task.priority.displayName}">Priorité</span>
+                                </td>
+                                <td>
+                                    <div th:if="${task.dueDate != null}">
+                                        <span th:text="${#temporals.format(task.dueDate, 'dd/MM/yyyy')}">Date</span>
+                                        <br>
+                                        <small class="text-muted"
+                                            th:text="${#temporals.format(task.dueDate, 'HH:mm')}">Heure</small>
+                                        <div th:if="${task.overdue}" class="text-warning mt-1">
+                                            <i class="bi bi-exclamation-triangle"></i>
+                                            <small>En retard</small>
+                                        </div>
+                                    </div>
+                                    <span th:unless="${task.dueDate != null}" class="text-muted">
+                                        <em>Non définie</em>
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a th:href="@{/tasks/{id}(id=${task.id})}" class="btn btn-outline-primary"
+                                            title="Voir le détail">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a th:href="@{/tasks/{id}/edit(id=${task.id})}" class="btn btn-outline-warning"
+                                            title="Modifier">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <form th:action="@{/tasks/{id}/delete(id=${task.id})}" method="post"
+                                            class="d-inline">
+                                            <button type="submit" class="btn btn-outline-danger btn-sm"
+                                                title="Supprimer"
+                                                onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette tâche ?')">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistiques rapides -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="bi bi-bar-chart"></i> Répartition des tâches
+                        </h5>
+                        <div class="row text-center">
+                            <div class="col-md-2">
+                                <h4 class="text-primary" th:text="${tasks.size()}">0</h4>
+                                <p class="mb-0">Total</p>
+                            </div>
+                            <div class="col-md-2">
+                                <h4 class="text-secondary"
+                                    th:text="${#lists.size(#lists.select(tasks, task.status.name() == 'TODO'))}">0</h4>
+                                <p class="mb-0">À faire</p>
+                            </div>
+                            <div class="col-md-2">
+                                <h4 class="text-warning"
+                                    th:text="${#lists.size(#lists.select(tasks, task.status.name() == 'IN_PROGRESS'))}">
+                                    0</h4>
+                                <p class="mb-0">En cours</p>
+                            </div>
+                            <div class="col-md-2">
+                                <h4 class="text-success"
+                                    th:text="${#lists.size(#lists.select(tasks, task.status.name() == 'DONE'))}">0</h4>
+                                <p class="mb-0">Terminées</p>
+                            </div>
+                            <div class="col-md-2">
+                                <h4 class="text-danger" th:text="${#lists.size(#lists.select(tasks, task.overdue))}">0
+                                </h4>
+                                <p class="mb-0">En retard</p>
+                            </div>
+                            <div class="col-md-2">
+                                <a th:href="@{/api/tasks}" target="_blank" class="btn btn-outline-info btn-sm">
+                                    <i class="bi bi-code"></i> API JSON
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</html>

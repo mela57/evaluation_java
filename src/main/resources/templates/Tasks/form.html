@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org"
+    th:replace="~{layout :: layout(~{::content}, ${task.id != null ? 'Modifier la tâche' : 'Nouvelle tâche'})}">
+<div th:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>
+            <i class="bi bi-plus-circle" th:if="${task.id == null}"></i>
+            <i class="bi bi-pencil" th:unless="${task.id == null}"></i>
+            <span th:text="${task.id != null ? 'Modifier la tâche' : 'Nouvelle tâche'}">Formulaire tâche</span>
+        </h2>
+        <a th:href="@{/tasks}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Retour à la liste
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-form"></i> Informations de la tâche
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/tasks}" th:object="${task}" method="post">
+                        <input type="hidden" th:field="*{id}">
+                        <input type="hidden" th:field="*{createdAt}">
+                        <input type="hidden" th:field="*{updatedAt}">
+
+                        <!-- Titre -->
+                        <div class="mb-3">
+                            <label for="title" class="form-label">
+                                <i class="bi bi-card-text"></i> Titre *
+                            </label>
+                            <input type="text" class="form-control" th:field="*{title}" required
+                                placeholder="Entrez le titre de la tâche">
+                            <div class="form-text">Le titre est obligatoire et doit être descriptif.</div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-3">
+                            <label for="description" class="form-label">
+                                <i class="bi bi-text-paragraph"></i> Description
+                            </label>
+                            <textarea class="form-control" rows="4" th:field="*{description}"
+                                placeholder="Description détaillée de la tâche (optionnel)"></textarea>
+                            <div class="form-text">Ajoutez des détails pour clarifier la tâche.</div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Statut -->
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="status" class="form-label">
+                                        <i class="bi bi-flag"></i> Statut
+                                    </label>
+                                    <select class="form-select" th:field="*{status}">
+                                        <option th:each="status : ${statuses}" th:value="${status}"
+                                            th:text="${status.displayName}">Statut</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Priorité -->
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="priority" class="form-label">
+                                        <i class="bi bi-exclamation-triangle"></i> Priorité
+                                    </label>
+                                    <select class="form-select" th:field="*{priority}">
+                                        <option th:each="priority : ${priorities}" th:value="${priority}"
+                                            th:text="${priority.displayName}">Priorité</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Utilisateur assigné -->
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="user" class="form-label">
+                                        <i class="bi bi-person"></i> Assigné à *
+                                    </label>
+                                    <select class="form-select" th:field="*{user}" required>
+                                        <option value="">-- Sélectionner un utilisateur --</option>
+                                        <option th:each="user : ${users}" th:value="${user.id}"
+                                            th:text="${user.fullName + ' (' + user.username + ')'}">Utilisateur</option>
+                                    </select>
+                                    <div class="form-text">Choisissez qui sera responsable de cette tâche.</div>
+                                </div>
+                            </div>
+
+                            <!-- Date d'échéance -->
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="dueDate" class="form-label">
+                                        <i class="bi bi-calendar"></i> Date d'échéance
+                                    </label>
+                                    <input type="datetime-local" class="form-control" th:field="*{dueDate}">
+                                    <div class="form-text">Optionnel : définit une date limite.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Boutons d'action -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <a th:href="@{/tasks}" class="btn btn-secondary">
+                                <i class="bi bi-x-circle"></i> Annuler
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i>
+                                <span
+                                    th:text="${task.id != null ? 'Modifier la tâche' : 'Créer la tâche'}">Sauvegarder</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panneau d'aide -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h6 class="mb-0">
+                        <i class="bi bi-info-circle"></i> Aide
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <h6>Conseils pour créer une bonne tâche :</h6>
+                    <ul class="small">
+                        <li><strong>Titre :</strong> Soyez précis et concis</li>
+                        <li><strong>Description :</strong> Ajoutez des détails si nécessaire</li>
+                        <li><strong>Priorité :</strong>
+                            <ul>
+                                <li><span class="badge bg-danger">Élevée</span> : Urgent et important</li>
+                                <li><span class="badge bg-warning text-dark">Moyenne</span> : Important mais pas urgent
+                                </li>
+                                <li><span class="badge bg-info">Basse</span> : Ni urgent ni important</li>
+                            </ul>
+                        </li>
+                        <li><strong>Échéance :</strong> Fixez une date réaliste</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Prévisualisation si modification -->
+            <div th:if="${task.id != null}" class="card mt-3">
+                <div class="card-header bg-warning text-dark">
+                    <h6 class="mb-0">
+                        <i class="bi bi-eye"></i> Informations actuelles
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <p><strong>Créée le :</strong><br>
+                        <small th:text="${#temporals.format(task.createdAt, 'dd/MM/yyyy à HH:mm')}">Date</small>
+                    </p>
+
+                    <p><strong>Dernière modification :</strong><br>
+                        <small th:text="${#temporals.format(task.updatedAt, 'dd/MM/yyyy à HH:mm')}">Date</small>
+                    </p>
+
+                    <a th:href="@{/tasks/{id}(id=${task.id})}" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-eye"></i> Voir le détail
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</html>

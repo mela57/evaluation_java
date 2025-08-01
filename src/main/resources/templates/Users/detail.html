@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::content}, ${user.fullName})}">
+<div th:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>
+            <i class="bi bi-person"></i> Profil utilisateur
+        </h2>
+        <a th:href="@{/users}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Retour à la liste
+        </a>
+    </div>
+
+    <div class="row">
+        <!-- Informations personnelles -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-person-circle"></i> Informations personnelles
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center"
+                            style="width: 80px; height: 80px;">
+                            <i class="bi bi-person-fill text-secondary" style="font-size: 2.5rem;"></i>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <strong><i class="bi bi-person"></i> Nom d'utilisateur :</strong><br>
+                        <span th:text="${user.username}" class="text-primary">Username</span>
+                    </div>
+
+                    <div class="mb-3">
+                        <strong><i class="bi bi-person-badge"></i> Nom complet :</strong><br>
+                        <span th:text="${user.fullName}" th:if="${!#strings.isEmpty(user.fullName)}">Nom complet</span>
+                        <em class="text-muted" th:unless="${!#strings.isEmpty(user.fullName)}">Non renseigné</em>
+                    </div>
+
+                    <div class="mb-3">
+                        <strong><i class="bi bi-envelope"></i> Email :</strong><br>
+                        <a th:href="@{'mailto:' + ${user.email}}" th:text="${user.email}"
+                            class="text-decoration-none">Email</a>
+                    </div>
+
+                    <div class="mb-3">
+                        <strong><i class="bi bi-calendar"></i> Inscription :</strong><br>
+                        <span th:text="${#temporals.format(user.createdAt, 'dd/MM/yyyy à HH:mm')}">Date</span>
+                    </div>
+
+                    <div class="mb-3">
+                        <strong><i class="bi bi-list-task"></i> Tâches assignées :</strong><br>
+                        <span class="badge bg-primary fs-6" th:text="${user.tasks.size()}">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tâches assignées -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-list-task"></i> Tâches assignées
+                    </h5>
+                    <span class="badge bg-primary" th:text="${user.tasks.size()}">0</span>
+                </div>
+                <div class="card-body">
+                    <div th:if="${user.tasks.isEmpty()}" class="text-center text-muted py-4">
+                        <i class="bi bi-inbox" style="font-size: 3rem;"></i>
+                        <p class="mt-2">Aucune tâche assignée à cet utilisateur.</p>
+                        <a th:href="@{/tasks/new}" class="btn btn-success btn-sm">
+                            <i class="bi bi-plus-circle"></i> Créer une tâche
+                        </a>
+                    </div>
+
+                    <div th:unless="${user.tasks.isEmpty()}">
+                        <div class="list-group">
+                            <div class="list-group-item" th:each="task : ${user.tasks}">
+                                <div class="d-flex w-100 justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1">
+                                            <a th:href="@{/tasks/{id}(id=${task.id})}" th:text="${task.title}"
+                                                class="text-decoration-none">Titre de la tâche</a>
+                                        </h6>
+                                        <p class="mb-1 text-muted" th:text="${task.description}"
+                                            th:if="${!#strings.isEmpty(task.description)}">Description</p>
+
+                                        <div class="d-flex gap-2 mt-2">
+                                            <span class="badge"
+                                                th:classappend="${task.status.name() == 'DONE'} ? 'bg-success' : (${task.status.name() == 'IN_PROGRESS'} ? 'bg-warning text-dark' : 'bg-secondary')"
+                                                th:text="${task.status.displayName}">Statut</span>
+
+                                            <span class="badge"
+                                                th:classappend="${task.priority.name() == 'HIGH'} ? 'bg-danger' : (${task.priority.name() == 'MEDIUM'} ? 'bg-warning text-dark' : 'bg-info')"
+                                                th:text="${task.priority.displayName}">Priorité</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="text-end">
+                                        <small class="text-muted">
+                                            <i class="bi bi-calendar"></i>
+                                            <span th:text="${#temporals.format(task.createdAt, 'dd/MM')}">Date</span>
+                                        </small>
+                                        <div th:if="${task.dueDate != null}" class="mt-1">
+                                            <small th:classappend="${task.overdue} ? 'text-warning' : 'text-muted'">
+                                                <i class="bi bi-clock"
+                                                    th:classappend="${task.overdue} ? ' bi-exclamation-triangle' : ''"></i>
+                                                <span
+                                                    th:text="${#temporals.format(task.dueDate, 'dd/MM')}">Échéance</span>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Statistiques des tâches de l'utilisateur -->
+                        <div class="row mt-3">
+                            <div class="col-md-4 text-center">
+                                <div class="bg-light p-2 rounded">
+                                    <h6 class="text-secondary mb-0"
+                                        th:text="${#lists.size(#lists.select(user.tasks, task.status.name() == 'TODO'))}">
+                                        0</h6>
+                                    <small class="text-muted">À faire</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <div class="bg-light p-2 rounded">
+                                    <h6 class="text-warning mb-0"
+                                        th:text="${#lists.size(#lists.select(user.tasks, task.status.name() == 'IN_PROGRESS'))}">
+                                        0</h6>
+                                    <small class="text-muted">En cours</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <div class="bg-light p-2 rounded">
+                                    <h6 class="text-success mb-0"
+                                        th:text="${#lists.size(#lists.select(user.tasks, task.status.name() == 'DONE'))}">
+                                        0</h6>
+                                    <small class="text-muted">Terminées</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</html>
