@@ -5,36 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accueil - TODO App</title>
-    <link href="/webjars/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="/style.css">
-    <!-- <style>
-        .navbar-brand {
-            font-weight: bold;
-        }
-
-        .card {
-            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-            border: 1px solid rgba(0, 0, 0, 0.125);
-        }
-
-        .badge {
-            font-size: 0.75em;
-        }
-
-        footer {
-            margin-top: 50px;
-            padding: 20px 0;
-            background-color: #f8f9fa;
-            border-top: 1px solid #dee2e6;
-        }
-    </style> -->
 </head>
 
 <body>
-    <!-- Navigation -->
+    <!-- Navigation avec container-fluid pour full width -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
+        <div class="container-fluid">
             <a class="navbar-brand" th:href="@{/}">
                 <i class="bi bi-check-circle"></i> TODO App
             </a>
@@ -44,7 +23,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/}">
+                        <a class="nav-link active" th:href="@{/}">
                             <i class="bi bi-house"></i> Accueil
                         </a>
                     </li>
@@ -70,47 +49,50 @@
         </div>
     </nav>
 
-    <!-- Contenu principal -->
-    <main class="container mt-4">
-        <!-- Hero Section -->
+    <!-- Contenu principal avec container (80% width) -->
+    <div class="container mt-4">
+        <!-- Hero Section avec plus d'espacement -->
         <div class="row mb-5">
-            <div class="col-md-12">
-                <div class="jumbotron bg-light p-5 rounded-3 text-center">
+            <div class="col-12">
+                <div class="jumbotron text-center">
                     <h1 class="display-4">
-                        <i class="bi bi-check-circle text-primary"></i>
+                        <i class="bi bi-check-circle text-white"></i>
                         Bienvenue dans TODO App
                     </h1>
                     <p class="lead">Gérez efficacement vos tâches et suivez votre productivité.</p>
-                    <hr class="my-4">
-                    <p>Cette application SpringBoot permet de créer, organiser et suivre vos tâches quotidiennes avec
-                        une interface moderne et intuitive.</p>
-                    <a class="btn btn-primary btn-lg me-2" th:href="@{/tasks}" role="button">
-                        <i class="bi bi-list-task"></i> Voir les tâches
-                    </a>
-                    <a class="btn btn-success btn-lg" th:href="@{/tasks/new}" role="button">
-                        <i class="bi bi-plus-circle"></i> Nouvelle tâche
-                    </a>
+                    <hr class="my-4 text-white">
+                    <p>Cette application SpringBoot permet de créer, organiser et suivre vos tâches quotidiennes avec une interface moderne et intuitive.</p>
+                    
+                    <!-- Boutons avec meilleur espacement -->
+                    <div class="mt-4">
+                        <a class="btn btn-primary btn-lg me-3" th:href="@{/tasks}" role="button">
+                            <i class="bi bi-list-task"></i> Voir les tâches
+                        </a>
+                        <a class="btn btn-success btn-lg" th:href="@{/tasks/new}" role="button">
+                            <i class="bi bi-plus-circle"></i> Nouvelle tâche
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Statistiques -->
         <div class="row mb-4">
-            <div class="col-md-6">
-                <div class="card text-center">
+            <div class="col-md-6 mb-3">
+                <div class="card stats-card-primary text-center">
                     <div class="card-body">
-                        <h2 class="card-title text-primary" th:text="${totalTasks ?: 0}">0</h2>
-                        <p class="card-text">
+                        <h2 class="card-title text-white" th:text="${totalTasks ?: 0}">0</h2>
+                        <p class="card-text text-white">
                             <i class="bi bi-list-task"></i> Tâches totales
                         </p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="card text-center">
+            <div class="col-md-6 mb-3">
+                <div class="card stats-card-success text-center">
                     <div class="card-body">
-                        <h2 class="card-title text-success" th:text="${totalUsers ?: 0}">0</h2>
-                        <p class="card-text">
+                        <h2 class="card-title text-white" th:text="${totalUsers ?: 0}">0</h2>
+                        <p class="card-text text-white">
                             <i class="bi bi-people"></i> Utilisateurs
                         </p>
                     </div>
@@ -119,17 +101,16 @@
         </div>
 
         <!-- Navigation rapide -->
-        <div class="row">
+        <div class="row mb-4">
             <div class="col-md-6 mb-3">
-                <div class="card h-100">
+                <div class="card h-100 shadow-custom">
                     <div class="card-header bg-primary text-white">
                         <h5 class="mb-0">
                             <i class="bi bi-list-task"></i> Gestion des tâches
                         </h5>
                     </div>
                     <div class="card-body">
-                        <p class="card-text">Consultez, créez et gérez toutes vos tâches avec différents statuts et
-                            priorités.</p>
+                        <p class="card-text">Consultez, créez et gérez toutes vos tâches avec différents statuts et priorités.</p>
                         <div class="d-grid gap-2">
                             <a th:href="@{/tasks}" class="btn btn-outline-primary">
                                 <i class="bi bi-eye"></i> Voir toutes les tâches
@@ -142,7 +123,7 @@
                 </div>
             </div>
             <div class="col-md-6 mb-3">
-                <div class="card h-100">
+                <div class="card h-100 shadow-custom">
                     <div class="card-header bg-success text-white">
                         <h5 class="mb-0">
                             <i class="bi bi-people"></i> Utilisateurs
@@ -164,50 +145,50 @@
         </div>
 
         <!-- Fonctionnalités -->
-        <div class="row mt-4">
-            <div class="col-12">
+        <div class="row">
+            <div class="col-12 mb-4">
                 <h3 class="text-center mb-4">Fonctionnalités de l'application</h3>
             </div>
             <div class="col-md-4 mb-3">
-                <div class="card text-center">
+                <div class="card text-center shadow-custom">
                     <div class="card-body">
-                        <i class="bi bi-check-circle-fill text-success" style="font-size: 2rem;"></i>
-                        <h5 class="card-title mt-2">CRUD Complet</h5>
+                        <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+                        <h5 class="card-title mt-3">CRUD Complet</h5>
                         <p class="card-text">Créer, lire, modifier et supprimer des tâches et utilisateurs.</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-4 mb-3">
-                <div class="card text-center">
+                <div class="card text-center shadow-custom">
                     <div class="card-body">
-                        <i class="bi bi-link-45deg text-primary" style="font-size: 2rem;"></i>
-                        <h5 class="card-title mt-2">API REST</h5>
+                        <i class="bi bi-link-45deg text-primary" style="font-size: 3rem;"></i>
+                        <h5 class="card-title mt-3">API REST</h5>
                         <p class="card-text">Interface API complète pour intégrations externes.</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-4 mb-3">
-                <div class="card text-center">
+                <div class="card text-center shadow-custom">
                     <div class="card-body">
-                        <i class="bi bi-database-fill text-warning" style="font-size: 2rem;"></i>
-                        <h5 class="card-title mt-2">Base H2</h5>
+                        <i class="bi bi-database-fill text-warning" style="font-size: 3rem;"></i>
+                        <h5 class="card-title mt-3">Base H2</h5>
                         <p class="card-text">Base de données H2 intégrée avec données de test.</p>
                     </div>
                 </div>
             </div>
         </div>
-    </main>
+    </div>
 
     <!-- Footer -->
-    <footer class="bg-light">
+    <footer>
         <div class="container text-center">
-            <p class="mb-0 text-muted">
+            <p class="mb-0">
                 <i class="bi bi-code-slash"></i> TODO App - SpringBoot Evaluation
             </p>
         </div>
     </footer>
 
-    <script src="/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
